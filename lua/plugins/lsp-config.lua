@@ -9,7 +9,14 @@ return {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "tsserver", "jdtls" }
+        ensure_installed = {
+          "lua_ls", -- Lua
+          "tsserver", -- JavaScript, TypeScript, React
+          "jdtls", -- Java
+          "clangd", -- C++
+          "html", -- HTML
+          "cssls" -- CSS
+        }
       })
     end
   },
@@ -19,6 +26,9 @@ return {
       local lspconfig = require("lspconfig")
       lspconfig.lua_ls.setup({})
       lspconfig.tsserver.setup({})
+      lspconfig.clangd.setup({})
+      lspconfig.html.setup({})
+      lspconfig.cssls.setup({})
 
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup('UserLspConfig', {}),

@@ -1,36 +1,40 @@
+local servers = {
+  'lua_ls', -- Lua
+  'tsserver', -- JavaScript, TypeScript, React
+  'jdtls', -- Java
+  'clangd', -- C++
+  'html', -- HTML
+  'cssls', -- CSS
+  'gradle_ls', -- Gradle, Groovy 
+}
+
 return {
   {
-    "williamboman/mason.nvim",
+    'williamboman/mason.nvim',
     config = function()
-      require("mason").setup()
+      require('mason').setup()
     end
   },
   {
-    "williamboman/mason-lspconfig.nvim",
+    'williamboman/mason-lspconfig.nvim',
     config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = {
-          "lua_ls", -- Lua
-          "tsserver", -- JavaScript, TypeScript, React
-          "jdtls", -- Java
-          "clangd", -- C++
-          "html", -- HTML
-          "cssls" -- CSS
-        }
+      require('mason-lspconfig').setup({
+        ensure_installed = servers
       })
     end
   },
   {
-    "neovim/nvim-lspconfig",
+    'neovim/nvim-lspconfig',
     config = function()
-      local lspconfig = require("lspconfig")
-      lspconfig.lua_ls.setup({})
-      lspconfig.tsserver.setup({})
-      lspconfig.clangd.setup({})
-      lspconfig.html.setup({})
-      lspconfig.cssls.setup({})
+      local lspconfig = require('lspconfig')
+      require('mason-lspconfig').setup_handlers({
+        function(server)
+          lspconfig[server].setup({})
+        end,
+        ['jdtls'] = function() end
+      })
 
-      vim.api.nvim_create_autocmd("LspAttach", {
+      vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('UserLspConfig', {}),
         callback = function(ev)
           local opts = { buffer = ev.buf }
@@ -44,8 +48,6 @@ return {
     end
   },
   {
-    'mfussenegger/nvim-jdtls',
-    config = function()
-    end
+    'mfussenegger/nvim-jdtls'
   }
 }
